@@ -8,7 +8,7 @@ import 'package:waypass_app/features/auth/data/sign_up_request_dto.dart';
 
 class AuthService {
   // Nota: Si pruebas en emulador Android, localhost es 10.0.2.2
-  final String _baseUrl = 'http://localhost:5191/api/Authentication';
+  final String _baseUrl = 'http://10.0.2.2:5191/api/Authentication';
 
   Future<AuthResponseDto> signIn(SignInRequestDto requestDto) async {
     final uri = Uri.parse('$_baseUrl/sign-in');
