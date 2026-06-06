@@ -14,8 +14,7 @@ class LoginPage extends StatelessWidget {
       body: BlocConsumer<LoginViewModel, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
-            // Aquí navegas a tu página principal:
-            // Navigator.pushReplacementNamed(context, '/home');
+            // Mostrar un mensaje de bienvenida
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Bienvenido, ${state.user.username}'), backgroundColor: Colors.green),
             );
@@ -162,8 +161,8 @@ class LoginPage extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Aquí navegas a la pantalla de Registro
-                                // Navigator.pushNamed(context, '/register');
+                                // Navegación hacia la pantalla de Registro
+                                Navigator.pushNamed(context, '/register');
                               },
                               child: const Text('Regístrate'),
                             ),
