@@ -1,15 +1,16 @@
 import 'package:waypass_app/features/auth/domain/user.dart';
 
 abstract class AuthRepository {
-
-  Future<User?> signIn({
+  
+  Future<User> signIn({
     required String email,
     required String password,
   });
 
-  Future<User?> signUp({
+  Future<void> signUp({
     required String username,
     required String email,
     required String password,
+    required int role, 
   });
 }
