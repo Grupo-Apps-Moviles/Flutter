@@ -8,7 +8,7 @@ import 'package:waypass_app/features/auth/data/sign_up_request_dto.dart';
 
 class AuthService {
   final String _baseUrl =
-      'https://TU-BACKEND.com/api/authentication';
+      'http://localhost:5191/api/authentication';
 
   // POST /api/authentication/sign-in
   Future<AuthResponseDto?> signIn(SignInRequestDto requestDto) async {
