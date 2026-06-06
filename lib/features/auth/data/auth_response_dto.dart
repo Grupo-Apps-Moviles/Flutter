@@ -1,28 +1,33 @@
 import 'package:waypass_app/features/auth/domain/user.dart';
 
 class AuthResponseDto {
-  final String token;
+  final int id;
   final String username;
-  final String email;
+  final int role;
+  final String token;
 
   const AuthResponseDto({
-    required this.token,
+    required this.id,
     required this.username,
-    required this.email,
+    required this.role,
+    required this.token,
   });
 
   factory AuthResponseDto.fromJson(Map<String, dynamic> json) {
     return AuthResponseDto(
-      token:    json['token'],
+      id: json['id'],
       username: json['username'],
-      email:    json['email'],
+      role: json['role'],
+      token: json['token'],
     );
   }
 
   User toDomain() {
     return User(
+      id: id,
       username: username,
-      email:    email,
+      role: role,
+      token: token,
     );
   }
 }

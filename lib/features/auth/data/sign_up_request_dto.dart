@@ -8,7 +8,7 @@ class SignUpRequestDto {
     required this.username,
     required this.email,
     required this.password,
-    this.role = 0,    // valor por defecto — siempre usuario normal
+    required this.role,
   });
 
   Map<String, dynamic> toJson() {

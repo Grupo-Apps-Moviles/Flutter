@@ -7,11 +7,10 @@ import 'package:waypass_app/features/auth/data/sign_in_request_dto.dart';
 import 'package:waypass_app/features/auth/data/sign_up_request_dto.dart';
 
 class AuthService {
-  final String _baseUrl =
-      'http://localhost:5191/api/authentication';
+  // Nota: Si pruebas en emulador Android, localhost es 10.0.2.2
+  final String _baseUrl = 'http://localhost:5191/api/Authentication';
 
-  // POST /api/authentication/sign-in
-  Future<AuthResponseDto?> signIn(SignInRequestDto requestDto) async {
+  Future<AuthResponseDto> signIn(SignInRequestDto requestDto) async {
     final uri = Uri.parse('$_baseUrl/sign-in');
 
     final response = await http.post(
@@ -23,13 +22,13 @@ class AuthService {
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
       return AuthResponseDto.fromJson(json);
+    } else {
+      // Lanzamos error para simular el comportamiento de Retrofit
+      throw Exception('Error al iniciar sesión: ${response.body}');
     }
-
-    return null;
   }
 
-  // POST /api/authentication/sign-up
-  Future<AuthResponseDto?> signUp(SignUpRequestDto requestDto) async {
+  Future<void> signUp(SignUpRequestDto requestDto) async {
     final uri = Uri.parse('$_baseUrl/sign-up');
 
     final response = await http.post(
@@ -38,12 +37,9 @@ class AuthService {
       body: jsonEncode(requestDto.toJson()),
     );
 
-    if (response.statusCode == HttpStatus.ok ||
-        response.statusCode == HttpStatus.created) {
-      final json = jsonDecode(response.body);
-      return AuthResponseDto.fromJson(json);
+    if (response.statusCode != HttpStatus.ok && response.statusCode != HttpStatus.created) {
+      // Lanzamos el error para que el ViewModel lo atrape y lo muestre en la UI
+      throw Exception(response.body);
     }
-
-    return null;
   }
 }
