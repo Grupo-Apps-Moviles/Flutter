@@ -1,3 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http/http.dart' as http;
+import 'package:waypass_app/features/auth/data/auth_response_dto.dart';
+import 'package:waypass_app/features/auth/data/sign_in_request_dto.dart';
+import 'package:waypass_app/features/auth/data/sign_up_request_dto.dart';
+
 class AuthService {
   final String _baseUrl =
       'https://TU-BACKEND.com/api/authentication';
