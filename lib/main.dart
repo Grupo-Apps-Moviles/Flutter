@@ -35,7 +35,7 @@ class MainApp extends StatelessWidget {
             ),
         '/register': (context) => BlocProvider(
               create: (context) => getIt<LoginViewModel>(),
-              child: RegisterPage(), // Registramos la pantalla de registro
+              child: RegisterPage(), // Registramos la pantalla de registro - succellfull
             ),
         '/main': (context) => const MainPage(),
       },
