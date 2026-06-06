@@ -4,8 +4,7 @@ import 'package:waypass_app/features/auth/presentation/login_state.dart';
 import 'package:waypass_app/features/auth/presentation/login_view_model.dart';
 
 class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
-  
+  LoginPage({super.key});  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -20,6 +19,10 @@ class LoginPage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Bienvenido, ${state.user.username}'), backgroundColor: Colors.green),
             );
+            // AQUÍ ESTÁ LA MAGIA: 
+            // pushReplacementNamed destruye la pantalla de Login y te lleva al Main.
+            // Esto evita que el usuario pueda regresar al Login presionando el botón "Atrás" de su celular.
+            Navigator.pushReplacementNamed(context, '/main');
           }
         },
         builder: (context, state) {
