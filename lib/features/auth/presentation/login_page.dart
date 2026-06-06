@@ -5,133 +5,172 @@ import 'package:waypass_app/features/auth/presentation/login_view_model.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-
-  // controladores para sign-in
+  
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  // controladores para sign-up
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _signUpEmailController = TextEditingController();
-  final TextEditingController _signUpPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<LoginViewModel, LoginState>(
-        builder: (context, state) {
-
-          // Estado exitoso — muestra el mensaje
+      body: BlocConsumer<LoginViewModel, LoginState>(
+        listener: (context, state) {
           if (state is LoginSuccess) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 64),
-                  SizedBox(height: 16),
-                  Text(
-                    '¡Logrado!',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Text('Bienvenido, ${state.user.username}'),
-                  SizedBox(height: 4),
-                  Text(state.user.email, style: TextStyle(color: Colors.grey)),
-                ],
-              ),
+            // Aquí navegas a tu página principal:
+            // Navigator.pushReplacementNamed(context, '/home');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Bienvenido, ${state.user.username}'), backgroundColor: Colors.green),
             );
           }
+        },
+        builder: (context, state) {
+          return Container(
+            decoration: BoxDecoration(
+              // Equivalente a Brush.verticalGradient de Jetpack Compose
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Colors.purple[400]!, // Color medio morado
+                  Theme.of(context).colorScheme.primaryContainer,
+                ],
+              ),
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                  elevation: 4.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Iniciar sesión',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Bienvenido de nuevo a WayPass',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 32),
 
-          // formularios de login y registro
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 16,
-              children: [
-                SizedBox(height: 48),
+                        // Input Email
+                        TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: 'Correo electrónico',
+                            prefixIcon: const Icon(Icons.email_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
 
-                // --- SIGN IN ---
-                Text('Iniciar sesión',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        // Input Password
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'Contraseña',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
 
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Email',
+                        // Mostrar error si falla
+                        if (state is LoginFailure) ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.errorContainer,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.warning_amber_rounded, size: 20, color: Theme.of(context).colorScheme.onErrorContainer),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    state.error,
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer, fontSize: 12),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+
+                        const SizedBox(height: 24),
+
+                        // Botón de Login
+                        SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                            onPressed: state is LoginLoading
+                                ? null
+                                : () {
+                                    context.read<LoginViewModel>().signIn(
+                                          email: _emailController.text,
+                                          password: _passwordController.text,
+                                        );
+                                  },
+                            child: state is LoginLoading
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                  )
+                                : const Text('Ingresar', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Botón para ir al registro
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '¿No tienes cuenta?',
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Aquí navegas a la pantalla de Registro
+                                // Navigator.pushNamed(context, '/register');
+                              },
+                              child: const Text('Regístrate'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Contraseña',
-                  ),
-                ),
-
-                // muestra error si falló
-                if (state is LoginFailure)
-                  Text(state.error, style: TextStyle(color: Colors.red)),
-
-                // muestra spinner si está cargando
-                if (state is LoginLoading)
-                  Center(child: CircularProgressIndicator())
-                else
-                  FilledButton(
-                    onPressed: () {
-                      context.read<LoginViewModel>().signIn(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          );
-                    },
-                    child: Text('Ingresar'),
-                  ),
-
-                Divider(height: 48),
-
-                // --- SIGN UP ---
-                Text('Crear cuenta',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-
-                TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Username',
-                  ),
-                ),
-                TextField(
-                  controller: _signUpEmailController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Email',
-                  ),
-                ),
-                TextField(
-                  controller: _signUpPasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Contraseña',
-                  ),
-                ),
-
-                if (state is LoginLoading)
-                  SizedBox.shrink()
-                else
-                  OutlinedButton(
-                    onPressed: () {
-                      context.read<LoginViewModel>().signUp(
-                            username: _usernameController.text,
-                            email: _signUpEmailController.text,
-                            password: _signUpPasswordController.text,
-                          );
-                    },
-                    child: Text('Registrarse'),
-                  ),
-              ],
+              ),
             ),
           );
         },

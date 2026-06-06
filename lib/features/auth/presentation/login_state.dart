@@ -11,6 +11,11 @@ class LoginSuccess extends LoginState {
   LoginSuccess({required this.user});
 }
 
+class SignUpSuccess extends LoginState {
+  final String message;
+  SignUpSuccess({this.message = "Registro correcto"});
+}
+
 class LoginFailure extends LoginState {
   final String error;
   LoginFailure({required this.error});
