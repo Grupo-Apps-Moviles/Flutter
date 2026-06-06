@@ -16,10 +16,10 @@ class _MainPageState extends State<MainPage> {
   int selectedIndex = 0;
 
   final List<Widget> pages = const [
+    ProfilePage(),
     HomePage(),
     ReservationPage(),
     FavoritePage(),
-    ProfilePage(),
   ];
 
   @override
@@ -35,6 +35,11 @@ class _MainPageState extends State<MainPage> {
         },
         destinations: const [
           NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
             label: 'Home',
@@ -48,11 +53,6 @@ class _MainPageState extends State<MainPage> {
             icon: Icon(Icons.shopping_cart_outlined),
             selectedIcon: Icon(Icons.shopping_cart),
             label: 'Favorites',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
           ),
         ],
       ),
