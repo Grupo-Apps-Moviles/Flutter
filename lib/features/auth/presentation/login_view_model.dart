@@ -30,6 +30,9 @@ class LoginViewModel extends Cubit<LoginState> {
       await tokenManager.saveUserId(user.id);
       await tokenManager.saveRole(user.role);
 
+      await tokenManager.saveUsername(user.username);
+      await tokenManager.saveEmail(email.trim());
+
       emit(LoginSuccess(user: user));
     } catch (e) {
       emit(LoginFailure(error: _formatError(e)));

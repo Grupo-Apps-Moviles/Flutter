@@ -32,6 +32,24 @@ class TokenManager {
     return _prefs.getInt('role');
   }
 
+  // USERNAME
+  Future<void> saveUsername(String username) async {
+    await _prefs.setString('username', username);
+  }
+
+  String? getUsername() {
+    return _prefs.getString('username');
+  }
+
+  // EMAIL
+  Future<void> saveEmail(String email) async {
+    await _prefs.setString('email', email);
+  }
+
+  String? getEmail() {
+    return _prefs.getString('email');
+  }
+
   // LOGOUT
   Future<void> clearSession() async {
     await _prefs.clear();
