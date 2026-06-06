@@ -10,27 +10,28 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({required this.service});
 
   @override
-  Future<User?> signIn({
+  Future<User> signIn({
     required String email,
     required String password,
   }) async {
     final requestDto = SignInRequestDto(email: email, password: password);
     final responseDto = await service.signIn(requestDto);
-    return responseDto?.toDomain();
+    return responseDto.toDomain();
   }
 
   @override
-  Future<User?> signUp({
+  Future<void> signUp({
     required String username,
     required String email,
     required String password,
+    required int role,
   }) async {
     final requestDto = SignUpRequestDto(
       username: username,
       email: email,
       password: password,
+      role: role,
     );
-    final responseDto = await service.signUp(requestDto);
-    return responseDto?.toDomain();
+    await service.signUp(requestDto);
   }
 }
