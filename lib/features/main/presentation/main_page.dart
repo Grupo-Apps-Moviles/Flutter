@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:waypass_app/features/favorite/presentation/favorite_page.dart';
-import 'package:waypass_app/features/home/presentation/home_page.dart';
 import 'package:waypass_app/features/profile/presentation/profile_page.dart';
 import 'package:waypass_app/features/reservation/presentation/reservation_page.dart';
+import 'package:waypass_app/features/travel/presentation/travel_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -17,7 +17,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> pages = const [
     ProfilePage(),
-    HomePage(),
+    TravelPage(),
     ReservationPage(),
     FavoritePage(),
   ];
@@ -42,7 +42,7 @@ class _MainPageState extends State<MainPage> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Travel',
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_outline),
