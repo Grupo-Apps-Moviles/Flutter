@@ -8,6 +8,9 @@ import 'package:waypass_app/features/auth/presentation/login_view_model.dart';
 import 'package:waypass_app/features/profile/data/profile_repository_impl.dart';
 import 'package:waypass_app/features/profile/domain/profile_repository.dart';
 import 'package:waypass_app/features/profile/presentation/profile_view_model.dart';
+import 'package:waypass_app/features/travel/data/route_repository_impl.dart';
+import 'package:waypass_app/features/travel/data/route_service.dart';
+import 'package:waypass_app/features/travel/domain/route_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -38,4 +41,10 @@ Future<void> setup() async {
   getIt.registerFactory(
     () => ProfileViewModel(repository: getIt<ProfileRepository>()),
   );
+
+  // En Data Sources:
+  getIt.registerLazySingleton<RouteService>(() => RouteService(tokenManager: getIt<TokenManager>()));
+
+  // En Repositories:
+  getIt.registerLazySingleton<RouteRepository>(() => RouteRepositoryImpl(service: getIt<RouteService>()));
 }
