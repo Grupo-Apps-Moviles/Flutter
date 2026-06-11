@@ -49,12 +49,31 @@ class TravelView extends StatelessWidget {
           }
 
           if (state is RouteLoaded) {
+            // Validación de estado vacío
             if (state.routes.isEmpty) {
-              return const Center(
-                child: Text('No hay rutas de viaje disponibles en este momento.'),
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.directions_bus_filled_outlined, 
+                      size: 64, 
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No hay ninguna ruta disponible.',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
 
+            // Si hay rutas, mostramos la lista (este es el código que ya tienes)
             return RefreshIndicator(
               onRefresh: () => context.read<RouteViewModel>().loadRoutes(),
               child: ListView.builder(
