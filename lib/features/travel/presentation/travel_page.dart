@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waypass_app/core/di/dependency_injection.dart';
+import 'package:waypass_app/features/reservation/presentation/create_reservation_page.dart';
 import 'package:waypass_app/features/travel/domain/travel_route.dart';
 import 'package:waypass_app/features/travel/presentation/route_state.dart';
 import 'package:waypass_app/features/travel/presentation/route_view_model.dart';
@@ -25,7 +25,8 @@ class TravelView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rutas Disponibles', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Rutas Disponibles',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: BlocBuilder<RouteViewModel, RouteState>(
@@ -41,11 +42,14 @@ class TravelView extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
+                    Icon(Icons.error_outline,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.error),
                     const SizedBox(height: 12),
                     Text(
                       state.message,
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.error),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -68,10 +72,15 @@ class TravelView extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No hay ninguna ruta disponible.',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurfaceVariant,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -115,32 +124,31 @@ class _TravelRouteCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape:
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 3,
       shadowColor: Colors.black26,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 1. Imagen Superior (Mismo concepto que card-stop-img)
           SizedBox(
             height: 180,
             width: double.infinity,
             child: origin.imageUrl.isNotEmpty
                 ? Image.network(
-                    origin.imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
-                  )
+              origin.imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildPlaceholderImage(),
+            )
                 : _buildPlaceholderImage(),
           ),
 
-          // 2. Contenedor de Textos e Información
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Origen (Título principal)
                 Text(
                   origin.name,
                   style: theme.textTheme.titleLarge?.copyWith(
@@ -149,30 +157,31 @@ class _TravelRouteCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-
-                // Destino (Texto secundario con etiquetas en negrita)
                 RichText(
                   text: TextSpan(
-                    style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.grey[700]),
                     children: [
                       const TextSpan(
                         text: 'Destino: ',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
                       ),
                       TextSpan(text: destination.name),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Fila de Características (Ubicación y Duración)
                 Row(
                   children: [
                     Expanded(
                       flex: 3,
                       child: Row(
                         children: [
-                          Icon(Icons.location_on, size: 18, color: theme.colorScheme.primary),
+                          Icon(Icons.location_on,
+                              size: 18,
+                              color: theme.colorScheme.primary),
                           const SizedBox(width: 6),
                           Expanded(
                             child: Text(
@@ -190,7 +199,9 @@ class _TravelRouteCard extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Icon(Icons.access_time_filled, size: 18, color: theme.colorScheme.primary),
+                          Icon(Icons.access_time_filled,
+                              size: 18,
+                              color: theme.colorScheme.primary),
                           const SizedBox(width: 6),
                           Text(
                             '${route.duration} min',
@@ -203,7 +214,6 @@ class _TravelRouteCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
 
-                // Fila Final: Precio y Botón Reservar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -215,6 +225,7 @@ class _TravelRouteCard extends StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
+
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,
@@ -222,16 +233,20 @@ class _TravelRouteCard extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
                       ),
                       onPressed: () {
-                        // En la siguiente fase aquí enlazaremos el trigger al módulo 'reservation'
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Iniciando reserva hacia ${destination.name}...')),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                CreateReservationPage(route: route),
+                          ),
                         );
                       },
-                      child: const Text('Reservar', style: TextStyle(fontWeight: FontWeight.bold)),
-                    )
+                      child: const Text('Reservar',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                   ],
                 ),
               ],
@@ -246,7 +261,8 @@ class _TravelRouteCard extends StatelessWidget {
     return Container(
       color: const Color(0xFFE1E4E8),
       child: const Center(
-        child: Icon(Icons.directions_bus, size: 48, color: Colors.grey),
+        child:
+        Icon(Icons.directions_bus, size: 48, color: Colors.grey),
       ),
     );
   }
