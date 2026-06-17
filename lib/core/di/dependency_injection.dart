@@ -19,6 +19,12 @@ import 'package:waypass_app/features/travel/data/route_service.dart';
 import 'package:waypass_app/features/travel/domain/route_repository.dart';
 import 'package:waypass_app/features/travel/presentation/route_view_model.dart';
 
+// --- FEATURE: RESERVATION ---
+import 'package:waypass_app/features/reservation/data/reservation_repository_impl.dart';
+import 'package:waypass_app/features/reservation/data/reservation_service.dart';
+import 'package:waypass_app/features/reservation/domain/reservation_repository.dart';
+import 'package:waypass_app/features/reservation/presentation/reservation_view_model.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
@@ -26,46 +32,50 @@ Future<void> setup() async {
   // 1. CORE & CACHE LOCAL
   // =========================================================================
   final sharedPreferences = await SharedPreferences.getInstance();
-  getIt.registerLazySingleton<TokenManager>(() => TokenManager(sharedPreferences));
+  getIt.registerLazySingleton<TokenManager>(
+          () => TokenManager(sharedPreferences));
 
   // =========================================================================
-  // 2. DATA SOURCES (Servicios API externos)
+  // 2. DATA SOURCES
   // =========================================================================
   getIt.registerLazySingleton<AuthService>(() => AuthService());
-  getIt.registerLazySingleton<RouteService>(() => RouteService(tokenManager: getIt<TokenManager>()));
+  getIt.registerLazySingleton<RouteService>(
+          () => RouteService(tokenManager: getIt<TokenManager>()));
+  getIt.registerLazySingleton<ReservationService>(
+          () => ReservationService(tokenManager: getIt<TokenManager>()));
 
   // =========================================================================
-  // 3. REPOSITORIOS (Lógica de acceso a datos)
+  // 3. REPOSITORIOS
   // =========================================================================
   getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(service: getIt<AuthService>()),
+        () => AuthRepositoryImpl(service: getIt<AuthService>()),
   );
-  
   getIt.registerLazySingleton<ProfileRepository>(
-    () => ProfileRepositoryImpl(tokenManager: getIt<TokenManager>()),
+        () => ProfileRepositoryImpl(tokenManager: getIt<TokenManager>()),
   );
-  
   getIt.registerLazySingleton<RouteRepository>(
-    () => RouteRepositoryImpl(service: getIt<RouteService>()),
+        () => RouteRepositoryImpl(service: getIt<RouteService>()),
+  );
+  getIt.registerLazySingleton<ReservationRepository>(
+        () => ReservationRepositoryImpl(service: getIt<ReservationService>()),
   );
 
   // =========================================================================
-  // 4. VIEW MODELS / CUBITS (Gestión de estado de la UI)
-  // Nota: Usamos registerFactory para que se cree una instancia nueva 
-  // cada vez que se abre la pantalla correspondiente.
+  // 4. VIEW MODELS / CUBITS
   // =========================================================================
   getIt.registerFactory(
-    () => LoginViewModel(
+        () => LoginViewModel(
       repository: getIt<AuthRepository>(),
       tokenManager: getIt<TokenManager>(),
     ),
   );
-  
   getIt.registerFactory(
-    () => ProfileViewModel(repository: getIt<ProfileRepository>()),
+        () => ProfileViewModel(repository: getIt<ProfileRepository>()),
   );
-
   getIt.registerFactory(
-    () => RouteViewModel(repository: getIt<RouteRepository>()),
+        () => RouteViewModel(repository: getIt<RouteRepository>()),
+  );
+  getIt.registerFactory(
+        () => ReservationViewModel(repository: getIt<ReservationRepository>()),
   );
 }
