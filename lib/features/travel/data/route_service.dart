@@ -26,6 +26,8 @@ class RouteService {
     if (response.statusCode == HttpStatus.ok) {
       final List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((json) => TravelRouteDto.fromJson(json)).toList();
+    } else if (response.statusCode == HttpStatus.notFound) {
+      return [];
     } else {
       throw Exception('Error del servidor al obtener rutas (${response.statusCode})');
     }
