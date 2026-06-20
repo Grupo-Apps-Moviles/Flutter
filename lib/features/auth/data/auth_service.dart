@@ -22,9 +22,10 @@ class AuthService {
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
       return AuthResponseDto.fromJson(json);
+    } else if (response.statusCode == HttpStatus.unauthorized) {
+      throw Exception('Correo electrónico o contraseña incorrectos.');
     } else {
-      // Lanzamos error para simular el comportamiento de Retrofit
-      throw Exception('Error al iniciar sesión: ${response.body}');
+      throw Exception('No se pudo iniciar sesión. Inténtalo de nuevo.');
     }
   }
 
@@ -38,8 +39,10 @@ class AuthService {
     );
 
     if (response.statusCode != HttpStatus.ok && response.statusCode != HttpStatus.created) {
-      // Lanzamos el error para que el ViewModel lo atrape y lo muestre en la UI
-      throw Exception(response.body);
+      if (response.statusCode == HttpStatus.badRequest) {
+        throw Exception('Datos inválidos o el usuario ya existe.');
+      }
+      throw Exception('No se pudo crear la cuenta. Inténtalo de nuevo.');
     }
   }
 }

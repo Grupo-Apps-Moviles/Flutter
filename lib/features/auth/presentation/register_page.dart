@@ -89,6 +89,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'El nombre de usuario es obligatorio';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 16),
 
@@ -103,6 +109,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'El correo electrónico es obligatorio';
+                              }
+                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value.trim())) {
+                                return 'Ingresa un correo electrónico válido';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 16),
 
@@ -117,6 +132,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'La contraseña es obligatoria';
+                              }
+                              if (value.trim().length < 6) {
+                                return 'La contraseña debe tener al menos 6 caracteres';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 20),
 
@@ -179,12 +203,14 @@ class _RegisterPageState extends State<RegisterPage> {
                               onPressed: state is LoginLoading
                                   ? null
                                   : () {
-                                      context.read<LoginViewModel>().signUp(
-                                            username: _usernameController.text,
-                                            email: _emailController.text,
-                                            password: _passwordController.text,
-                                            userType: _selectedUserType,
-                                          );
+                                      if (_formKey.currentState!.validate()) {
+                                        context.read<LoginViewModel>().signUp(
+                                              username: _usernameController.text,
+                                              email: _emailController.text,
+                                              password: _passwordController.text,
+                                              userType: _selectedUserType,
+                                            );
+                                      }
                                     },
                               child: state is LoginLoading
                                   ? const CircularProgressIndicator(color: Colors.white)

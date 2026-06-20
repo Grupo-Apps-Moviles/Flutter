@@ -17,6 +17,14 @@ class LoginViewModel extends Cubit<LoginState> {
     required String email,
     required String password,
   }) async {
+    if (email.trim().isEmpty) {
+      emit(LoginFailure(error: 'Ingresa tu correo electrónico.'));
+      return;
+    }
+    if (password.trim().isEmpty) {
+      emit(LoginFailure(error: 'Ingresa tu contraseña.'));
+      return;
+    }
     emit(LoginLoading());
 
     try {
@@ -43,8 +51,12 @@ class LoginViewModel extends Cubit<LoginState> {
     required String username,
     required String email,
     required String password,
-    required String userType, // "Pasajero" o "Conductor"
+    required String userType,
   }) async {
+    if (username.trim().isEmpty || email.trim().isEmpty || password.trim().isEmpty) {
+      emit(LoginFailure(error: 'Por favor completa todos los campos.'));
+      return;
+    }
     emit(LoginLoading());
 
     try {
