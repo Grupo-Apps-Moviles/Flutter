@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:waypass_app/core/config/api_config.dart';
 import 'package:waypass_app/features/auth/data/token_manager.dart';
 import 'package:waypass_app/features/travel/data/travel_route_dto.dart';
 
 class RouteService {
   final TokenManager tokenManager;
-  final String _baseUrl = 'http://10.0.2.2:5191/api/Routes';
+  final String _baseUrl = '${ApiConfig.baseUrl}/Routes';
 
   RouteService({required this.tokenManager});
 

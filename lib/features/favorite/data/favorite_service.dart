@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:waypass_app/core/config/api_config.dart';
 import 'package:waypass_app/features/auth/data/token_manager.dart';
 import 'create_favorite_request.dart';
 import 'favorite_route_dto.dart';
 
 class FavoriteService {
   final TokenManager tokenManager;
-  final String _baseUrl = 'http://10.0.2.2:5191/api/favorite-routes';
+  final String _baseUrl = '${ApiConfig.baseUrl}/favorite-routes';
 
   FavoriteService({required this.tokenManager});
 

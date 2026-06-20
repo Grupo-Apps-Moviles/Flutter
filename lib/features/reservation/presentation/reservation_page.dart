@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waypass_app/core/di/dependency_injection.dart';
 import 'package:waypass_app/features/auth/data/token_manager.dart';
+import 'package:waypass_app/features/favorite/presentation/favorite_state.dart';
+import 'package:waypass_app/features/favorite/presentation/favorite_view_model.dart';
 import '../data/reservation_dto.dart';
 import 'reservation_view_model.dart';
 import 'reservation_state.dart';
@@ -143,11 +145,40 @@ class _ReservationCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Reserva #${dto.id}',
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: Text('Reserva #${dto.id}',
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+                ),
+                BlocBuilder<FavoriteViewModel, FavoriteState>(
+                  builder: (context, state) {
+                    final isFavorite = state is FavoriteLoaded &&
+                        state.favoriteRouteIds.contains(dto.routeId);
+                    return IconButton(
+                      icon: Icon(
+                        isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.grey,
+                        size: 22,
+                      ),
+                      onPressed: () {
+                        final userId =
+                            getIt<TokenManager>().getUserId() ?? 0;
+                        context
+                            .read<FavoriteViewModel>()
+                            .toggleFavorite(userId, dto.routeId);
+                      },
+                      tooltip: isFavorite
+                          ? 'Quitar de favoritos'
+                          : 'Agregar a favoritos',
+                      constraints: const BoxConstraints(),
+                      padding: const EdgeInsets.all(4),
+                    );
+                  },
+                ),
+                const SizedBox(width: 8),
                 Chip(
                   label: Text(_statusLabel(dto.status),
                       style: const TextStyle(
