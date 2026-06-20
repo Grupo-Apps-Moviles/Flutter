@@ -25,6 +25,12 @@ import 'package:waypass_app/features/reservation/data/reservation_service.dart';
 import 'package:waypass_app/features/reservation/domain/reservation_repository.dart';
 import 'package:waypass_app/features/reservation/presentation/reservation_view_model.dart';
 
+// --- FEATURE: FAVORITE ---
+import 'package:waypass_app/features/favorite/data/favorite_repository_impl.dart';
+import 'package:waypass_app/features/favorite/data/favorite_service.dart';
+import 'package:waypass_app/features/favorite/domain/favorite_repository.dart';
+import 'package:waypass_app/features/favorite/presentation/favorite_view_model.dart';
+
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
@@ -43,6 +49,8 @@ Future<void> setup() async {
           () => RouteService(tokenManager: getIt<TokenManager>()));
   getIt.registerLazySingleton<ReservationService>(
           () => ReservationService(tokenManager: getIt<TokenManager>()));
+  getIt.registerLazySingleton<FavoriteService>(
+          () => FavoriteService(tokenManager: getIt<TokenManager>()));
 
   // =========================================================================
   // 3. REPOSITORIOS
@@ -58,6 +66,9 @@ Future<void> setup() async {
   );
   getIt.registerLazySingleton<ReservationRepository>(
         () => ReservationRepositoryImpl(service: getIt<ReservationService>()),
+  );
+  getIt.registerLazySingleton<FavoriteRepository>(
+        () => FavoriteRepositoryImpl(service: getIt<FavoriteService>()),
   );
 
   // =========================================================================
@@ -77,5 +88,8 @@ Future<void> setup() async {
   );
   getIt.registerFactory(
         () => ReservationViewModel(repository: getIt<ReservationRepository>()),
+  );
+  getIt.registerFactory(
+        () => FavoriteViewModel(repository: getIt<FavoriteRepository>()),
   );
 }

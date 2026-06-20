@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:waypass_app/core/di/dependency_injection.dart';
+import 'package:waypass_app/features/auth/data/token_manager.dart';
+import 'package:waypass_app/features/favorite/presentation/favorite_state.dart';
+import 'package:waypass_app/features/favorite/presentation/favorite_view_model.dart';
 import 'package:waypass_app/features/reservation/presentation/create_reservation_page.dart';
 import 'package:waypass_app/features/travel/domain/travel_route.dart';
 import 'package:waypass_app/features/travel/presentation/route_state.dart';
@@ -131,17 +134,55 @@ class _TravelRouteCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 180,
-            width: double.infinity,
-            child: origin.imageUrl.isNotEmpty
-                ? Image.network(
-              origin.imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  _buildPlaceholderImage(),
-            )
-                : _buildPlaceholderImage(),
+          Stack(
+            children: [
+              SizedBox(
+                height: 180,
+                width: double.infinity,
+                child: origin.imageUrl.isNotEmpty
+                    ? Image.network(
+                  origin.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildPlaceholderImage(),
+                )
+                    : _buildPlaceholderImage(),
+              ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: BlocBuilder<FavoriteViewModel, FavoriteState>(
+                  builder: (context, state) {
+                    final isFavorite = state is FavoriteLoaded &&
+                        state.favoriteRouteIds.contains(route.id);
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.4),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : Colors.white,
+                        ),
+                        onPressed: () {
+                          final userId =
+                              getIt<TokenManager>().getUserId() ?? 0;
+                          context
+                              .read<FavoriteViewModel>()
+                              .toggleFavorite(userId, route.id);
+                        },
+                        tooltip: isFavorite
+                            ? 'Quitar de favoritos'
+                            : 'Agregar a favoritos',
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
 
           Padding(
