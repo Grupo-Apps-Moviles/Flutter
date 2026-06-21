@@ -1,3 +1,3 @@
 class ApiConfig {
-  static const String baseUrl = 'http://10.0.2.2:5191/api';
+  static const String baseUrl = 'https://waypass-1egd.onrender.com/api';
 }
