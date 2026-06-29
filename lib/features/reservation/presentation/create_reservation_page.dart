@@ -26,6 +26,7 @@ class _CreateReservationPageState extends State<CreateReservationPage> {
 
   bool _isLoadingPaypal = true;
   bool _isProcessing = false;
+  bool _alreadyReserved = false;
   String? _orderId;
   String? _errorMessage;
 
@@ -34,6 +35,25 @@ class _CreateReservationPageState extends State<CreateReservationPage> {
     super.initState();
     _reservationRepository = getIt<ReservationRepository>();
     _tokenManager = getIt<TokenManager>();
+    _checkAndInit();
+  }
+
+  Future<void> _checkAndInit() async {
+    final userId = _tokenManager.getUserId() ?? 0;
+    try {
+      final reservations =
+          await _reservationRepository.getUserReservations(userId);
+      final exists = reservations.any((r) => r.routeId == widget.route.id);
+      if (exists) {
+        if (mounted) {
+          setState(() {
+            _alreadyReserved = true;
+            _isLoadingPaypal = false;
+          });
+        }
+        return;
+      }
+    } catch (_) {}
     _initPaypal();
   }
 
@@ -153,6 +173,35 @@ class _CreateReservationPageState extends State<CreateReservationPage> {
   }
 
   Widget _buildBody() {
+    if (_alreadyReserved) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.info_outline, size: 56, color: Colors.orange),
+              const SizedBox(height: 12),
+              const Text(
+                'Ya tienes una reserva para esta ruta.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Volver'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     // Error
     if (_errorMessage != null) {
       return Center(

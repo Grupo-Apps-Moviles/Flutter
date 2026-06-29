@@ -36,7 +36,21 @@ class ReservationViewModel extends Cubit<ReservationState> {
     emit(ReservationLoading());
     try {
       final reservations = await repository.getUserReservations(userId);
-      emit(ReservationListLoaded(reservations: reservations));
+
+      final driverIds = reservations.map((r) => r.driverId).toSet();
+      final driverNames = <int, String>{};
+      for (final driverId in driverIds) {
+        try {
+          driverNames[driverId] = await repository.getDriverName(driverId);
+        } catch (_) {
+          driverNames[driverId] = 'Conductor #$driverId';
+        }
+      }
+
+      emit(ReservationListLoaded(
+        reservations: reservations,
+        driverNames: driverNames,
+      ));
     } catch (e) {
       emit(ReservationError(message: e.toString()));
     }

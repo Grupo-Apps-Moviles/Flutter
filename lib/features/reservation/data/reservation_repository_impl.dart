@@ -17,4 +17,9 @@ class ReservationRepositoryImpl implements ReservationRepository {
   Future<List<ReservationDto>> getUserReservations(int userId) {
     return service.getUserReservations(userId);
   }
+
+  @override
+  Future<String> getDriverName(int driverId) {
+    return service.getUsernameById(driverId);
+  }
 }

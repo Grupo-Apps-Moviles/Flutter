@@ -5,4 +5,6 @@ abstract class ReservationRepository {
   Future<void> createReservation(CreateReservationRequest request);
 
   Future<List<ReservationDto>> getUserReservations(int userId);
+
+  Future<String> getDriverName(int driverId);
 }

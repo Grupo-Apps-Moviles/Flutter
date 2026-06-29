@@ -50,8 +50,8 @@ class _MainPageState extends State<MainPage> {
               label: 'Profile',
             ),
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.directions_bus_outlined),
+              selectedIcon: Icon(Icons.directions_bus),
               label: 'Travel',
             ),
             NavigationDestination(

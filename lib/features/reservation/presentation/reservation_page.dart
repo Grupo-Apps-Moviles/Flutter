@@ -109,8 +109,15 @@ class _ReservationView extends StatelessWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: state.reservations.length,
-                itemBuilder: (context, index) =>
-                    _ReservationCard(dto: state.reservations[index]),
+                itemBuilder: (context, index) {
+                  final dto = state.reservations[index];
+                  final driverName = state.driverNames[dto.driverId]
+                      ?? 'Conductor #${dto.driverId}';
+                  return _ReservationCard(
+                    dto: dto,
+                    driverName: driverName,
+                  );
+                },
               ),
             );
           }
@@ -124,8 +131,12 @@ class _ReservationView extends StatelessWidget {
 
 class _ReservationCard extends StatelessWidget {
   final ReservationDto dto;
+  final String driverName;
 
-  const _ReservationCard({required this.dto});
+  const _ReservationCard({
+    required this.dto,
+    required this.driverName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -162,11 +173,8 @@ class _ReservationCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            _infoRow(Icons.directions_bus,
-                'Ruta ID: ${dto.routeId}', theme),
-            const SizedBox(height: 6),
             _infoRow(Icons.person_outline,
-                'Conductor ID: ${dto.driverId}', theme),
+                'Conductor: $driverName', theme),
             const SizedBox(height: 6),
             _infoRow(Icons.attach_money,
                 'Monto: S/ ${dto.amount.toStringAsFixed(2)}', theme),

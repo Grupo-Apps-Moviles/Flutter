@@ -29,6 +29,25 @@ class ReservationService {
     }
   }
 
+  Future<String> getUsernameById(int userId) async {
+    final token = tokenManager.getToken() ?? '';
+
+    final response = await http.get(
+      Uri.parse('${ApiConfig.baseUrl}/Users/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body) as Map<String, dynamic>;
+      return json['username'] as String? ?? 'Desconocido';
+    } else {
+      throw Exception('Error al obtener usuario ($userId)');
+    }
+  }
+
   Future<List<ReservationDto>> getUserReservations(int userId) async {
     final token = tokenManager.getToken() ?? '';
 

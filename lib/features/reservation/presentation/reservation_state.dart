@@ -10,7 +10,8 @@ class ReservationSuccess extends ReservationState {}
 
 class ReservationListLoaded extends ReservationState {
   final List<ReservationDto> reservations;
-  ReservationListLoaded({required this.reservations});
+  final Map<int, String> driverNames;
+  ReservationListLoaded({required this.reservations, this.driverNames = const {}});
 }
 
 class ReservationError extends ReservationState {
